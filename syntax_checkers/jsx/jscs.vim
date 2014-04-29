@@ -17,19 +17,20 @@ let g:loaded_syntastic_jsx_jscs_checker = 1
 let s:save_cpo = &cpo
 set cpo&vim
 
-" we borrow SyntaxCheckers_java_checkstyle_Preprocess() from java/checkstyle
-runtime! syntax_checkers/java/*.vim
-
 function! SyntaxCheckers_jsx_jscs_GetLocList() dict
     let makeprg = self.makeprgBuild({ 'post_args': '--no-colors --reporter checkstyle' })
     let errorformat = '%f:%t:%l:%c:%m'
-    return SyntasticMake({
+
+    let loclist = SyntasticMake({
         \ 'makeprg': makeprg,
         \ 'errorformat': errorformat,
         \ 'subtype': 'Style',
-        \ 'preprocess': 'SyntaxCheckers_java_checkstyle_Preprocess',
-        \ 'postprocess': ['sort'],
+        \ 'preprocess': 'checkstyle',
         \ 'returns': [0, 2] })
+
+    call self.setWantSort(1)
+
+    return loclist
 endfunction
 
 call g:SyntasticRegistry.CreateAndRegisterChecker({
