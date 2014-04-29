@@ -9,10 +9,10 @@
 "             See http://sam.zoy.org/wtfpl/COPYING for more details.
 "============================================================================
 
-if exists("g:loaded_syntastic_javascript_jscs_checker")
+if exists("g:loaded_syntastic_jsx_jscs_checker")
     finish
 endif
-let g:loaded_syntastic_javascript_jscs_checker = 1
+let g:loaded_syntastic_jsx_jscs_checker = 1
 
 let s:save_cpo = &cpo
 set cpo&vim
@@ -20,7 +20,7 @@ set cpo&vim
 " we borrow SyntaxCheckers_java_checkstyle_Preprocess() from java/checkstyle
 runtime! syntax_checkers/java/*.vim
 
-function! SyntaxCheckers_javascript_jscs_GetLocList() dict
+function! SyntaxCheckers_jsx_jscs_GetLocList() dict
     let makeprg = self.makeprgBuild({ 'post_args': '--no-colors --reporter checkstyle' })
     let errorformat = '%f:%t:%l:%c:%m'
     return SyntasticMake({
@@ -29,11 +29,11 @@ function! SyntaxCheckers_javascript_jscs_GetLocList() dict
         \ 'subtype': 'Style',
         \ 'preprocess': 'SyntaxCheckers_java_checkstyle_Preprocess',
         \ 'postprocess': ['sort'],
-        \ 'returns': [0, 1, 2] })
+        \ 'returns': [0, 2] })
 endfunction
 
 call g:SyntasticRegistry.CreateAndRegisterChecker({
-    \ 'filetype': 'javascript',
+    \ 'filetype': 'jsx',
     \ 'name': 'jscs'})
 
 let &cpo = s:save_cpo
