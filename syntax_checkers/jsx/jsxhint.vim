@@ -33,7 +33,7 @@ function! SyntaxCheckers_jsx_jsxhint_GetLocList() dict
     let jsxhint_new = s:JsxhintNew()
     let makeprg = self.makeprgBuild({
         \ 'exe': expand(g:syntastic_jsxhint_exec),
-        \ 'post_args': '' . s:Args() })
+        \ 'args_after': '--verbose ' })
 
     let errorformat = jsxhint_new ?
         \ '%A%f: line %l\, col %v\, %m \(%t%*\d\)' :
@@ -42,7 +42,8 @@ function! SyntaxCheckers_jsx_jsxhint_GetLocList() dict
     return SyntasticMake({
         \ 'makeprg': makeprg,
         \ 'errorformat': errorformat,
-        \ 'defaults': {'bufnr': bufnr('')} })
+        \ 'defaults': {'bufnr': bufnr('')},
+        \ 'returns': [0, 1, 2] })
 endfunction
 
 function! s:JsxhintNew()
