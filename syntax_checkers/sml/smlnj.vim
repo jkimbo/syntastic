@@ -1,7 +1,7 @@
 "============================================================================
-"File:        rust.vim
+"File:        smlnj.vim
 "Description: Syntax checking plugin for syntastic.vim
-"Maintainer:  Chad Jablonski <chad.jablonski at gmail dot com>
+"Maintainer:  LCD 47 <lcd047 at gmail dot com>
 "License:     This program is free software. It comes without any warranty,
 "             to the extent permitted by applicable law. You can redistribute
 "             it and/or modify it under the terms of the Do What The Fuck You
@@ -10,33 +10,38 @@
 "
 "============================================================================
 
-if exists("g:loaded_syntastic_rust_rustc_checker")
+if exists("g:loaded_syntastic_sml_smlnj_checker")
     finish
 endif
-let g:loaded_syntastic_rust_rustc_checker = 1
+let g:loaded_syntastic_sml_smlnj_checker = 1
 
 let s:save_cpo = &cpo
 set cpo&vim
 
-function! SyntaxCheckers_rust_rustc_GetLocList() dict
-    let makeprg = self.makeprgBuild({ 'args_after': '--no-trans' })
+function! SyntaxCheckers_sml_smlnj_GetLocList() dict
+    let makeprg = self.makeprgBuild({})
 
-    let errorformat  =
-        \ '%E%f:%l:%c: %\d%#:%\d%# %.%\{-}error:%.%\{-} %m,'   .
-        \ '%W%f:%l:%c: %\d%#:%\d%# %.%\{-}warning:%.%\{-} %m,' .
-        \ '%C%f:%l %m,' .
-        \ '%-Z%.%#'
+    let errorformat =
+        \ '%E%f:%l%\%.%c %trror: %m,' .
+        \ '%E%f:%l%\%.%c-%\d%\+%\%.%\d%\+ %trror: %m,' .
+        \ '%W%f:%l%\%.%c %tarning: %m,' .
+        \ '%W%f:%l%\%.%c-%\d%\+%\%.%\d%\+ %tarning: %m,' .
+        \ '%C%\s%\+%m,' .
+        \ '%-G%.%#'
 
     return SyntasticMake({
         \ 'makeprg': makeprg,
-        \ 'errorformat': errorformat })
+        \ 'errorformat': errorformat,
+        \ 'postprocess': ['compressWhitespace'],
+        \ 'returns': [0, 1] })
 endfunction
 
 call g:SyntasticRegistry.CreateAndRegisterChecker({
-    \ 'filetype': 'rust',
-    \ 'name': 'rustc'})
+    \ 'filetype': 'sml',
+    \ 'name': 'smlnj',
+    \ 'exec': 'sml'})
 
 let &cpo = s:save_cpo
 unlet s:save_cpo
 
-" vim: set et sts=4 sw=4:
+" vim: set sw=4 sts=4 et fdm=marker:
