@@ -33,7 +33,7 @@ function! SyntaxCheckers_jsx_jsxhint_GetLocList() dict
     let jsxhint_new = s:JsxhintNew()
     let makeprg = self.makeprgBuild({
         \ 'exe': expand(g:syntastic_jsxhint_exec),
-        \ 'args_after': '--verbose ' })
+        \ 'args_after': '--verbose --jsx-only ' })
 
     let errorformat = jsxhint_new ?
         \ '%A%f: line %l\, col %v\, %m \(%t%*\d\)' :
