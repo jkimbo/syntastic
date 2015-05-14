@@ -9,36 +9,35 @@
 "             See http://sam.zoy.org/wtfpl/COPYING for more details.
 "============================================================================
 
-if exists('g:loaded_syntastic_javascript_jscs_checker')
+if exists("g:loaded_syntastic_jsx_jscs_checker")
     finish
 endif
-let g:loaded_syntastic_javascript_jscs_checker = 1
-
-if !exists('g:syntastic_javascript_jscs_sort')
-    let g:syntastic_javascript_jscs_sort = 1
-endif
+let g:loaded_syntastic_jsx_jscs_checker = 1
 
 let s:save_cpo = &cpo
 set cpo&vim
 
-function! SyntaxCheckers_javascript_jscs_GetLocList() dict
-    let makeprg = self.makeprgBuild({ 'args_after': '--no-colors --reporter checkstyle --esnext --esprima=esprima-fb' })
-
+function! SyntaxCheckers_jsx_jscs_GetLocList() dict
+    let makeprg = self.makeprgBuild({ 'post_args': '--no-colors --esnext --reporter checkstyle' })
     let errorformat = '%f:%t:%l:%c:%m'
 
-    return SyntasticMake({
+    let loclist = SyntasticMake({
         \ 'makeprg': makeprg,
         \ 'errorformat': errorformat,
         \ 'subtype': 'Style',
         \ 'preprocess': 'checkstyle',
-        \ 'returns': [0, 2] })
+        \ 'returns': [0, 1, 2] })
+
+    call self.setWantSort(1)
+
+    return loclist
 endfunction
 
 call g:SyntasticRegistry.CreateAndRegisterChecker({
-    \ 'filetype': 'javascript',
+    \ 'filetype': 'jsx',
     \ 'name': 'jscs'})
 
 let &cpo = s:save_cpo
 unlet s:save_cpo
 
-" vim: set sw=4 sts=4 et fdm=marker:
+" vim: set et sts=4 sw=4:
